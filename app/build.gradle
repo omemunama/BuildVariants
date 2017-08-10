@@ -11,6 +11,27 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    // Define the endpoint strings
+    def endpointFile = file('endpoint.properties')
+    def Properties endpointProperties = new Properties()
+    endpointProperties.load(new FileInputStream(endpointFile))
+
+    // Specify the build flavors
+    productFlavors {
+        staging {
+            applicationIdSuffix '.staging'
+            versionNameSuffix "-staging"
+
+            buildConfigField 'String', 'M_API_URL', endpointProperties['STAGING_URL_API']
+        }
+
+        production {
+            buildConfigField 'String', 'M_API_URL', endpointProperties['PRODUCTION_URL_API']
+        }
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
